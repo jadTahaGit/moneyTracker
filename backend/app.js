@@ -1,16 +1,18 @@
 const cors = require('cors');
 const express = require('express');
-const dataRoutes = require('./dataRoutes');
+// const dataRoutes = require('./dataRoutes');
+const assignCategories = require('./Cat_utlities/catAssigner');
+const calculateCategoryTotals = require('./Cat_utlities/CatTotalsCalculator');
 const app = express();
 app.use(cors());
 
-app.get('/api/data/:month/:year', dataRoutes.getDataByMonth);
-app.get('/api/data/:year', dataRoutes.getDataByYear);
+// app.get('/api/data/:month/:year', dataRoutes.getDataByMonth);
+// app.get('/api/data/:year', dataRoutes.getDataByYear);
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// const port = 3000;
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
 
 const {
   readExcelFile,
@@ -30,4 +32,10 @@ const data_April_2022 = filterDataByMonth(result, 4, 2022);
 
 const AprilTotal = calculateMonthlyExpense(data_April_2022);
 
-console.log(AprilTotal);
+// Usage example
+const transactionsWithCategories = assignCategories(result);
+
+const cat_Totals = calculateCategoryTotals(transactionsWithCategories);
+
+// console.log(transactionsWithCategories);
+console.log(cat_Totals);
