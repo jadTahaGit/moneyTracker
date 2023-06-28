@@ -1,5 +1,7 @@
+const cors = require('cors');
 const express = require('express');
 const app = express();
+app.use(cors());
 
 app.get('/api/data/:month/:year', (req, res) => {
   const { month, year } = req.params;
