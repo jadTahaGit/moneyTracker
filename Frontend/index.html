@@ -5,34 +5,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Money System</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="dataProcessor.js"></script>
+    <script src="visualization.js"></script>
   </head>
   <body>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <div id="line-graph"></div>
-    <script>
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 800 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
+    <script src="main.js">
 
-                    const svg = d3
-                      .select('#line-graph')
-                      .append('svg')
-                      .attr('width', width + margin.left + margin.right)
-                      .attr('height', height + margin.top + margin.bottom)
-                      .append('g')
-                      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-                      const month = 4;
-                     const year = 2022;
 
-      fetch(`http://localhost:3000/api/data/${month}/${year}`)
-        .then((response) => response.json())
-        .then((data) => {
-          // Process the retrieved data
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+                      const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+                          const width = 800 - margin.left - margin.right;
+                          const height = 400 - margin.top - margin.bottom;
+
+                                  const svg = d3
+                                    .select('#line-graph')
+                                    .append('svg')
+                                    .attr('width', width + margin.left + margin.right)
+                                    .attr('height', height + margin.top + margin.bottom)
+                                    .append('g')
+                                    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+                                    const month = 4;
+                                   const year = 2022;
+
+                                   let dataProcessed;
+                    fetch(`http://localhost:3000/api/data/${month}/${year}`)
+                      .then((response) => response.json())
+                      .then((data) => {
+                        // Process the retrieved data
+                        dataProcessed = prepareDataForD3(data);
+                        console.log(dataProcessed);
+
+
+                        const xScale = d3
+              .scaleLinear()
+              .domain([1, dataProcessed.length]) // Assuming the days range from 1 to the number of dataProcessed points
+              .range([0, width]);
+
+              const yScale = d3
+              .scaleLinear()
+              .domain([0, d3.max(dataProcessed, (d) => d.amount)]) // Adjust the domain to fit your dataProcessed
+              .range([height, 0]);
+
+
+
+              const line = d3
+        .line()
+        .x((d) => xScale(d.day))
+        .y((d) => yScale(d.amount));
+        // Draw the line graph. Use the line generator to create a path element representing the line graph. For example:
+        // javascript
+        // Copy code
+        svg
+        .append('path')
+        .datum(dataProcessed)
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('stroke-width', 2)
+        .attr('d', line);
+
+        const xAxis = d3.axisBottom(xScale);
+        const yAxis = d3.axisLeft(yScale);
+
+
+      })
+                      .catch((error) => {
+                        console.error(error);
+                      });
     </script>
   </body>
 </html>
