@@ -1,25 +1,11 @@
 const cors = require('cors');
 const express = require('express');
+const dataRoutes = require('./dataRoutes');
 const app = express();
 app.use(cors());
 
-app.get('/api/data/:month/:year', (req, res) => {
-  const { month, year } = req.params;
-  const result = readExcelFile(filePath, sheetName, cellRange);
-  const filteredData = filterDataByMonth(
-    result,
-    parseInt(month),
-    parseInt(year)
-  );
-  res.json(filteredData);
-});
-
-app.get('/api/data/:year', (req, res) => {
-  const { year } = req.params;
-  const result = readExcelFile(filePath, sheetName, cellRange);
-  const filteredData = filterDataByYear(result, parseInt(year));
-  res.json(filteredData);
-});
+app.get('/api/data/:month/:year', dataRoutes.getDataByMonth);
+app.get('/api/data/:year', dataRoutes.getDataByYear);
 
 const port = 3000;
 app.listen(port, () => {
