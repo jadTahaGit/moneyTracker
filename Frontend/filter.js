@@ -11,8 +11,9 @@ filterButton.addEventListener('click', () => {
 
   if (selectedYear && selectedMonth) {
     resetGraph();
-    fetchData(selectedMonth, selectedYear);
+    fetchDataByMonthAndYear(selectedMonth, selectedYear);
   } else if (selectedYear) {
+    fetchDataByYear(selectedYear);
   } else {
     // Year is not selected, show error message
     dataContainer.innerHTML = 'Please choose a year';
