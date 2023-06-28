@@ -5,12 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Money System</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="dataProcessor.js"></script>
     <script src="visualization.js"></script>
     <script src="D3-Utilities.js"></script>
   </head>
   <body>
+    <div class="navbar">
+      <a href="index.html">HOME</a>
+      <a href="./pieChart/pieChart.html">PIE-CHART</a>
+    </div>
     <div id="line-graph"></div>
     <script src="main.js"></script>
 
@@ -44,9 +49,6 @@
 
     <button id="filterButton">Filter</button>
 
-    <div id="dataContainer">
-      <!-- Display the retrieved data here -->
-    </div>
     <script src="filter.js"></script>
   </body>
 </html>

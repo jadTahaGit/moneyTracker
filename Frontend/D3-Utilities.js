@@ -1,13 +1,13 @@
 const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-const width = 800 - margin.left - margin.right;
-const height = 400 - margin.top - margin.bottom;
+const lineGraphWidth = 800 - margin.left - margin.right;
+const lineGraphHeight = 400 - margin.top - margin.bottom;
 
 const initializeD3 = () => {
   const svg = d3
     .select('#line-graph')
     .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('width', lineGraphWidth + margin.left + margin.right)
+    .attr('height', lineGraphHeight + margin.top + margin.bottom)
     .append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -18,7 +18,7 @@ const scaleX = (dataProcessed) => {
   const xScale = d3
     .scaleLinear()
     .domain([1, dataProcessed.length])
-    .range([0, width]);
+    .range([0, lineGraphWidth]);
   return xScale;
 };
 
@@ -26,7 +26,7 @@ const scaleY = (dataProcessed) => {
   const yScale = d3
     .scaleLinear()
     .domain([0, d3.max(dataProcessed, (d) => d.amount)])
-    .range([height, 0]);
+    .range([lineGraphHeight, 0]);
 
   return yScale;
 };
@@ -80,15 +80,15 @@ const drawLineGraph = (svg, dataProcessed, line) => {
     .datum(dataProcessed)
     .attr('fill', 'none')
     .attr('stroke', 'steelblue')
-    .attr('stroke-width', 2)
+    .attr('stroke-lineGraphWidth', 2)
     .attr('d', line);
 };
 
-const createXAxis = (svg, xAxis, height) => {
+const createXAxis = (svg, xAxis, lineGraphHeight) => {
   svg
     .append('g')
     .attr('class', 'x-axis')
-    .attr('transform', 'translate(0,' + height + ')')
+    .attr('transform', 'translate(0,' + lineGraphHeight + ')')
     .call(xAxis);
 };
 
