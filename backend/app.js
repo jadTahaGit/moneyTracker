@@ -1,3 +1,22 @@
+const express = require('express');
+const app = express();
+
+app.get('/api/data/:month/:year', (req, res) => {
+  const { month, year } = req.params;
+  const result = readExcelFile(filePath, sheetName, cellRange);
+  const filteredData = filterDataByMonth(
+    result,
+    parseInt(month),
+    parseInt(year)
+  );
+  res.json(filteredData);
+});
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
 const {
   readExcelFile,
   filterDataByMonth,
