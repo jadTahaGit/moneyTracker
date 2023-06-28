@@ -14,6 +14,13 @@ app.get('/api/data/:month/:year', (req, res) => {
   res.json(filteredData);
 });
 
+app.get('/api/data/:year', (req, res) => {
+  const { year } = req.params;
+  const result = readExcelFile(filePath, sheetName, cellRange);
+  const filteredData = filterDataByYear(result, parseInt(year));
+  res.json(filteredData);
+});
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -23,6 +30,7 @@ const {
   readExcelFile,
   filterDataByMonth,
   calculateMonthlyExpense,
+  filterDataByYear,
 } = require('./excelReader');
 
 const filePath = './data.xlsm';

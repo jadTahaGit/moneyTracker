@@ -47,6 +47,19 @@ function filterDataByMonth(data, month, year) {
   });
 }
 
+function filterDataByYear(data, year) {
+  const excelNumberRange = getExcelNumberFromYear(year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  return data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    return (
+      bookingDate >= excelNumberFirstDay && bookingDate <= excelNumberLastDay
+    );
+  });
+}
+
 function calculateMonthlyExpense(data) {
   let totalExpense = 0;
 
@@ -111,6 +124,7 @@ function getExcelNumberFromDateObject(date) {
 module.exports = {
   readExcelFile,
   filterDataByMonth,
+  filterDataByYear,
   calculateMonthlyExpense,
   getDateFromExcelNumber,
   getExcelNumberFromDayMonthAndYear,
