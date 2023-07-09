@@ -2,6 +2,9 @@ const filePath = './data.xlsm';
 const sheetName = 'Bank Transactions';
 const cellRange = 'N10:X2026';
 
+const calculateCategoryTotals = require('./Cat_utlities/CatTotalsCalculator');
+const assignCategories = require('./Cat_utlities/catAssigner');
+
 const {
   readExcelFile,
   filterDataByMonth,
@@ -57,6 +60,20 @@ function getExpenseByMonth(req, res) {
   res.json(expense);
 }
 
+function getexpenseCategoriesByMonth(req, res) {
+  const { month, year } = req.params;
+  const result = readExcelFile(filePath, sheetName, cellRange);
+  const filteredData = filterDataByMonth(
+    result,
+    parseInt(month),
+    parseInt(year)
+  );
+  const transactionsWithCategories = assignCategories(filteredData);
+  const cat_Totals = calculateCategoryTotals(transactionsWithCategories);
+
+  res.json(cat_Totals);
+}
+
 function getIncomeByMonth(req, res) {
   const { month, year } = req.params;
   const result = readExcelFile(filePath, sheetName, cellRange);
@@ -90,6 +107,7 @@ module.exports = {
   getDataByMonth,
   getDataByYear,
   getExpenseByMonth,
+  getexpenseCategoriesByMonth,
   getIncomeByMonth,
   getPositiveDataByMonth,
   getNegativeDataByMonth,
