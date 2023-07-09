@@ -21,12 +21,8 @@ const {
   filterDataByYear,
 } = require('./excelReader');
 
-const filePath = './data.xlsm';
-const sheetName = 'Bank Transactions';
-const cellRange = 'N10:X1026';
-
-const result = readExcelFile(filePath, sheetName, cellRange);
-const data_April_2022 = filterDataByMonth(result, 4, 2022);
-const AprilTotal = calculateMonthlyExpense(data_April_2022);
-const transactionsWithCategories = assignCategories(result);
-const cat_Totals = calculateCategoryTotals(transactionsWithCategories);
+// const result = readExcelFile(filePath, sheetName, cellRange);
+// const data_April_2022 = filterDataByMonth(result, 4, 2022);
+// const AprilTotal = calculateMonthlyExpense(data_April_2022);
+// const transactionsWithCategories = assignCategories(result);
+// const cat_Totals = calculateCategoryTotals(transactionsWithCategories);

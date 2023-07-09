@@ -1,3 +1,7 @@
+const filePath = './data.xlsm';
+const sheetName = 'Bank Transactions';
+const cellRange = 'N10:X1026';
+
 const {
   readExcelFile,
   filterDataByMonth,
