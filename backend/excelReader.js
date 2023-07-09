@@ -126,6 +126,50 @@ function filterNegativeDataByYear(data, year) {
   });
 }
 
+function filterMonthlyExpensesOfASpecificYear(data, year) {
+  const excelNumberRange = getExcelNumberFromYear(year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  const filteredData = data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    const amount = item['Amount'];
+    return (
+      bookingDate >= excelNumberFirstDay &&
+      bookingDate <= excelNumberLastDay &&
+      amount < 0
+    );
+  });
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const monthlyData = Array.from({ length: 12 }).map((_, i) => ({
+    Month: months[i],
+    Amount: 0,
+  }));
+
+  filteredData.forEach((item) => {
+    const bookingDate = getDateFromExcelNumber(item['Booking Date']);
+    const bookingDateObject = new Date(bookingDate);
+    const monthIndex = bookingDateObject.getMonth();
+    monthlyData[monthIndex].Amount += item['Amount'];
+  });
+
+  return monthlyData;
+}
+
 function calculateMonthlyExpense(data) {
   let totalExpense = 0;
 
@@ -211,6 +255,7 @@ module.exports = {
   filterDataByYear,
   filterPositiveDataByYear,
   filterNegativeDataByYear,
+  filterMonthlyExpensesOfASpecificYear,
   calculateMonthlyExpense,
   calculateMonthlyIncome,
 };

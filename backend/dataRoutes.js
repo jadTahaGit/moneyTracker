@@ -10,6 +10,7 @@ const {
   calculateMonthlyIncome,
   filterPositiveDataByMonth,
   filterNegativeDataByMonth,
+  filterMonthlyExpensesOfASpecificYear,
 } = require('./excelReader');
 
 function getDataByMonth(req, res) {
@@ -75,6 +76,16 @@ function getDataByYear(req, res) {
   res.json(filteredData);
 }
 
+function getNegativeDataByYear_MonthlyBased(req, res) {
+  const { year } = req.params;
+  const result = readExcelFile(filePath, sheetName, cellRange);
+  const filteredData = filterMonthlyExpensesOfASpecificYear(
+    result,
+    parseInt(year)
+  );
+  res.json(filteredData);
+}
+
 module.exports = {
   getDataByMonth,
   getDataByYear,
@@ -82,4 +93,5 @@ module.exports = {
   getIncomeByMonth,
   getPositiveDataByMonth,
   getNegativeDataByMonth,
+  getNegativeDataByYear_MonthlyBased,
 };

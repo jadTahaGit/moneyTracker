@@ -12,6 +12,10 @@ app.get('/api/negative-data/:month/:year', dataRoutes.getNegativeDataByMonth);
 app.get('/api/expense/:month/:year', dataRoutes.getExpenseByMonth);
 app.get('/api/income/:month/:year', dataRoutes.getIncomeByMonth);
 app.get('/api/data/:year', dataRoutes.getDataByYear);
+app.get(
+  '/api/data-monthlyBased/:year',
+  dataRoutes.getNegativeDataByYear_MonthlyBased
+);
 
 const port = 3000;
 app.listen(port, () => {
