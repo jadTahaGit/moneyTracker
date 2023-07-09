@@ -12,6 +12,8 @@ filterButton.addEventListener('click', () => {
   if (selectedYear && selectedMonth) {
     resetGraph();
     fetchDataByMonthAndYear(selectedMonth, selectedYear);
+    fetchIncomeByMonthAndYear(selectedMonth, selectedYear);
+    fetchExpenseByMonthAndYear(selectedMonth, selectedYear);
   } else if (selectedYear) {
     fetchDataByYear(selectedYear);
   } else {

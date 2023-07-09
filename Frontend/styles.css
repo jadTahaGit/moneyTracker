@@ -1,0 +1,15 @@
+.widget {
+  background-color: #f8f9fa; /* Light grey background */
+  border: 1px solid #ddd; /* Grey border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Space around the content */
+  margin: 10px; /* Space around the widget */
+  width: 200px; /* Widget width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Slight shadow for depth */
+}
+
+.widget h3 {
+  font-family: Arial, sans-serif; /* Sans-serif font */
+  font-size: 18px; /* Larger font size */
+  color: #333; /* Dark grey text */
+}

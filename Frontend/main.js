@@ -1,5 +1,15 @@
 let dataProcessed;
 
+function updateIncomeWidget(sum) {
+  const sumElement = document.getElementById('totalIncome');
+  sumElement.textContent = sum;
+}
+
+function updateExpenseWidget(sum) {
+  const sumElement = document.getElementById('totalExpense');
+  sumElement.textContent = sum;
+}
+
 function renderGraph(dataProcessed) {
   const margin = { top: 20, right: 20, bottom: 30, left: 50 };
   const width = 800 - margin.left - margin.right;
@@ -86,6 +96,32 @@ async function fetchDataByYear(year) {
 
     CreateTable(data);
     renderGraph(dataProcessed);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+async function fetchIncomeByMonthAndYear(month, year) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/income/${month}/${year}`
+    );
+    const data = await response.json();
+
+    updateIncomeWidget(data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+async function fetchExpenseByMonthAndYear(month, year) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/expense/${month}/${year}`
+    );
+    const data = await response.json();
+
+    updateExpenseWidget(data);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
