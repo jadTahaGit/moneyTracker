@@ -5,17 +5,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Money System</title>
-    <link rel="stylesheet" href="styles.css" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="dataProcessor.js"></script>
-    <script src="visualization.js"></script>
     <script src="D3-Utilities.js"></script>
   </head>
+  <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link
+    href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css"
+    rel="stylesheet"
+  />
+
   <body>
-    <div class="navbar">
-      <a href="index.html">HOME</a>
-      <a href="./pieChart/pieChart.html">PIE-CHART</a>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">LineGraph</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./pieChart/pieChart.html">PieChart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Tables</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <div id="line-graph"></div>
     <script src="main.js"></script>
 
@@ -50,5 +82,12 @@
     <button id="filterButton">Filter</button>
 
     <script src="filter.js"></script>
+
+    <div id="table"></div>
+    <script></script>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"
+    ></script>
   </body>
 </html>

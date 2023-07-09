@@ -1,29 +1,61 @@
 let dataProcessed;
 
+function renderGraph(dataProcessed) {
+  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+  const width = 800 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+
+  const svg = d3
+    .select('#line-graph')
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+  let xScale = scaleX(dataProcessed);
+  let yScale = scaleY(dataProcessed);
+  let line = constructLine(xScale, yScale);
+  drawLineGraph(svg, dataProcessed, line);
+
+  addMinMaxLabels(svg, dataProcessed, xScale, yScale);
+
+  const xAxis = d3.axisBottom(xScale);
+  const yAxis = d3.axisLeft(yScale);
+
+  createXAxis(svg, xAxis, height);
+  createYAxis(svg, yAxis);
+}
+
+function CreateTable(data) {
+  new Tabulator('#table', {
+    data: data,
+    columns: [
+      { title: 'My Bank Account', field: 'My Bank Account' },
+      { title: 'Booking Date', field: 'Booking Date' },
+      { title: 'Validation Date', field: 'Validation Date' },
+      { title: 'Booking Text', field: 'Booking Text' },
+      { title: 'Purpose of Transaction', field: 'Purpose of Transaction' },
+      { title: 'Payer/Receiver', field: 'Payer/Receiver' },
+      { title: 'Target Bank Account/IBAN', field: 'Target Bank Account/IBAN' },
+      { title: 'BIC (SWIFT-Code)', field: 'BIC (SWIFT-Code)' },
+      { title: 'Amount', field: 'Amount' },
+      { title: 'Currency', field: 'Currency' },
+      { title: 'Info', field: 'Info' },
+    ],
+  });
+}
+
 async function fetchDataByMonthAndYear(month, year) {
   try {
-    const svg = initializeD3();
-
     const response = await fetch(
       `http://localhost:3000/api/data/${month}/${year}`
     );
     const data = await response.json();
+
     dataProcessed = prepareDataForD3(data);
-
-    console.log(dataProcessed);
-
-    let xScale = scaleX(dataProcessed);
-    let yScale = scaleY(dataProcessed);
-    let line = constructLine(xScale, yScale);
-    drawLineGraph(svg, dataProcessed, line);
-
-    addMinMaxLabels(svg, dataProcessed, xScale, yScale);
-
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
-
-    createXAxis(svg, xAxis, height);
-    createYAxis(svg, yAxis);
+    CreateTable(data);
+    renderGraph(dataProcessed);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -31,8 +63,6 @@ async function fetchDataByMonthAndYear(month, year) {
 
 async function fetchDataByYear(year) {
   try {
-    const svg = initializeD3();
-
     let url;
     if (year) {
       url = `http://localhost:3000/api/data/${year}`;
@@ -54,18 +84,8 @@ async function fetchDataByYear(year) {
     const data = await response.json();
     dataProcessed = prepareDataForD3(data);
 
-    let xScale = scaleX(dataProcessed);
-    let yScale = scaleY(dataProcessed);
-    let line = constructLine(xScale, yScale);
-    drawLineGraph(svg, dataProcessed, line);
-
-    addMinMaxLabels(svg, dataProcessed, xScale, yScale);
-
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
-
-    createXAxis(svg, xAxis, height);
-    createYAxis(svg, yAxis);
+    CreateTable(data);
+    renderGraph(dataProcessed);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
