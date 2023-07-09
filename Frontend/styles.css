@@ -13,3 +13,7 @@
   font-size: 18px; /* Larger font size */
   color: #333; /* Dark grey text */
 }
+
+.bar {
+  fill: steelblue;
+}

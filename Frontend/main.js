@@ -1,4 +1,23 @@
-let dataProcessed;
+function shortenMonthName(data) {
+  return data.map((item) => {
+    var date = new Date(item.Month + ' 1, 1970'); // Arbitrary year, only month is important
+    var shortMonth = date.toLocaleString('default', { month: 'short' });
+    return {
+      ...item,
+      Month: shortMonth,
+    };
+  });
+}
+
+function formatAmount(data) {
+  return data.map((item) => {
+    var formattedAmount = parseFloat(item.Amount.toFixed(2));
+    return {
+      ...item,
+      Amount: formattedAmount,
+    };
+  });
+}
 
 function updateIncomeWidget(sum) {
   const sumElement = document.getElementById('totalIncome');
@@ -10,34 +29,103 @@ function updateExpenseWidget(sum) {
   sumElement.textContent = sum;
 }
 
-function renderGraph(dataProcessed) {
-  const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-  const width = 800 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+function renderGraph(data) {
+  var svg = d3.select('svg'),
+    margin = { top: 20, right: 20, bottom: 30, left: 40 },
+    width = +svg.attr('width') - margin.left - margin.right,
+    height = +svg.attr('height') - margin.top - margin.bottom;
 
-  const svg = d3
-    .select('#line-graph')
-    .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+  var x = d3
+    .scaleBand()
+    .rangeRound([0, width])
+    .paddingInner(0.2) // Set inner padding
+    .paddingOuter(1); // Set outer padding
+
+  y = d3.scaleLinear().rangeRound([height, 0]);
+
+  var g = svg
     .append('g')
-    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  let xScale = scaleX(dataProcessed);
-  let yScale = scaleY(dataProcessed);
-  let line = constructLine(xScale, yScale);
-  drawLineGraph(svg, dataProcessed, line);
+  x.domain(
+    data.map(function (d) {
+      return d.Month;
+    })
+  );
+  y.domain([
+    0,
+    d3.max(data, function (d) {
+      return -d.Amount;
+    }),
+  ]);
 
-  addMinMaxLabels(svg, dataProcessed, xScale, yScale);
+  g.append('g').call((g) =>
+    g
+      .selectAll('text')
+      .data(y.ticks())
+      .join('text')
+      .attr('transform', (d) => `translate(0,${y(-d)})`)
+      .attr('dy', '0.32em')
+      .attr('x', -6)
+      .attr('text-anchor', 'end')
+      .text(y.tickFormat())
+  );
 
-  const xAxis = d3.axisBottom(xScale);
-  const yAxis = d3.axisLeft(yScale);
+  g.selectAll('.bar')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('x', function (d) {
+      return x(d.Month);
+    })
+    .attr('y', function (d) {
+      return y(-d.Amount);
+    })
+    .attr('width', x.bandwidth())
+    .attr('height', function (d) {
+      return height - y(-d.Amount);
+    });
 
-  createXAxis(svg, xAxis, height);
-  createYAxis(svg, yAxis);
+  // Add labels
+  g.selectAll('.label')
+    .data(data)
+    .enter()
+    .append('text')
+    .attr('class', 'label')
+    .attr('x', function (d) {
+      return x(d.Month) + x.bandwidth() / 2;
+    })
+    .attr('y', function (d) {
+      return y(-d.Amount) - 5;
+    })
+    .attr('text-anchor', 'middle')
+    .text(function (d) {
+      return -d.Amount;
+    });
+
+  x.domain(
+    data.map(function (d) {
+      return d.Month;
+    })
+  );
+  y.domain([
+    0,
+    d3.max(data, function (d) {
+      return -d.Amount;
+    }),
+  ]);
+
+  // Add the X Axis
+  g.append('g')
+    .attr('transform', 'translate(0,' + height + ')')
+    .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  g.append('g').call(d3.axisLeft(y));
 }
 
-function CreateTable(data) {
+function createTable(data) {
   new Tabulator('#table', {
     data: data,
     columns: [
@@ -58,14 +146,18 @@ function CreateTable(data) {
 
 async function fetchDataByMonthAndYear(month, year) {
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/data/${month}/${year}`
-    );
-    const data = await response.json();
+    const url1 = `http://localhost:3000/api/data/${month}/${year}`;
+    const url2 = `http://localhost:3000/api/data-monthlyBased/${year}`;
 
-    dataProcessed = prepareDataForD3(data);
-    CreateTable(data);
-    renderGraph(dataProcessed);
+    const [tableDataResponse, lineGraphDataResponse] = await Promise.all([
+      fetch(url1),
+      fetch(url2),
+    ]);
+
+    const tableData = await tableDataResponse.json();
+    const lineGraphData = await lineGraphDataResponse.json();
+    createTable(tableData);
+    renderGraph(formatAmount(shortenMonthName(lineGraphData)));
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -92,10 +184,9 @@ async function fetchDataByYear(year) {
 
     const response = await fetch(url);
     const data = await response.json();
-    dataProcessed = prepareDataForD3(data);
 
     CreateTable(data);
-    renderGraph(dataProcessed);
+    renderGraph(data);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
