@@ -1,5 +1,53 @@
 const XLSX = require('xlsx');
 
+function cleanTransactionData(data) {
+  const removedIndices = new Set();
+  const multipleReversals = new Set();
+  const n = data.length;
+
+  for (let i = 0; i < n; i++) {
+    if (removedIndices.has(i)) continue;
+    for (let j = i + 1; j < n; j++) {
+      if (removedIndices.has(j)) continue;
+
+      if (
+        data[i]['Amount'] === -data[j]['Amount'] &&
+        (data[i]['Target Bank Account/IBAN'] ===
+          data[j]['Target Bank Account/IBAN'] ||
+          data[i]['Payer/Receiver'] === data[j]['Payer/Receiver'])
+      ) {
+        // Found a pair, remove both transactions
+        removedIndices.add(i);
+        removedIndices.add(j);
+
+        // Check for multiple reversals
+        for (let k = j + 1; k < n; k++) {
+          if (
+            data[i]['Amount'] === -data[k]['Amount'] &&
+            (data[i]['Target Bank Account/IBAN'] ===
+              data[k]['Target Bank Account/IBAN'] ||
+              data[i]['Payer/Receiver'] === data[k]['Payer/Receiver'])
+          ) {
+            multipleReversals.add(i);
+            break;
+          }
+        }
+
+        break;
+      }
+    }
+  }
+
+  // Filter out the removed indices and keep the transactions we want
+  const cleanedData = data.filter((_, index) => !removedIndices.has(index));
+
+  // Print transactions with multiple reversals
+  console.log('Transactions with multiple reversals:');
+  multipleReversals.forEach((index) => console.log(data[index]));
+
+  return cleanedData;
+}
+
 function readExcelFile(filePath, sheetName, cellRange) {
   const workbook = XLSX.readFile(filePath);
   const worksheet = workbook.Sheets[sheetName];
@@ -31,7 +79,7 @@ function readExcelFile(filePath, sheetName, cellRange) {
     data.push(rowData);
   }
 
-  return data;
+  return cleanTransactionData(data);
 }
 
 function filterDataByMonth(data, month, year) {
