@@ -54,8 +54,6 @@ async function fetchDataByYear(year) {
     const data = await response.json();
     dataProcessed = prepareDataForD3(data);
 
-    console.log(dataProcessed);
-
     let xScale = scaleX(dataProcessed);
     let yScale = scaleY(dataProcessed);
     let line = constructLine(xScale, yScale);

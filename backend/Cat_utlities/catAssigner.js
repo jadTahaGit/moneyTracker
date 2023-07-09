@@ -83,7 +83,6 @@ const wordCategoryMapping = {
 };
 
 const assignCategories = (transactions) => {
-  console.log(transactions);
   return transactions.map((transaction) => {
     const bookingText = transaction['Booking Text'];
     let category;
@@ -127,7 +126,7 @@ const assignCategories = (transactions) => {
     }
 
     if (category === 'Unknown') {
-      console.warn('Transaction assigned to Unknown category:', transaction);
+      // console.warn('Transaction assigned to Unknown category:', transaction);
     }
 
     return {

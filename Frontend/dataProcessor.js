@@ -21,8 +21,5 @@ function prepareDataForD3(data) {
     formattedData.push(formattedItem);
   }
 
-  // Return the formatted data
-  console.log(formattedData);
-
   return formattedData;
 }
