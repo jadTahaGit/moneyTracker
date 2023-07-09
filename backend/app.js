@@ -7,6 +7,10 @@ const app = express();
 app.use(cors());
 
 app.get('/api/data/:month/:year', dataRoutes.getDataByMonth);
+app.get('/api/positive-data/:month/:year', dataRoutes.getPositiveDataByMonth);
+app.get('/api/negative-data/:month/:year', dataRoutes.getNegativeDataByMonth);
+app.get('/api/expense/:month/:year', dataRoutes.getExpenseByMonth);
+app.get('/api/income/:month/:year', dataRoutes.getIncomeByMonth);
 app.get('/api/data/:year', dataRoutes.getDataByYear);
 
 const port = 3000;

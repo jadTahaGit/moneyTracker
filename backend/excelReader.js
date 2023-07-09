@@ -41,8 +41,41 @@ function filterDataByMonth(data, month, year) {
 
   return data.filter((item) => {
     const bookingDate = item['Booking Date'];
+
     return (
       bookingDate >= excelNumberFirstDay && bookingDate <= excelNumberLastDay
+    );
+  });
+}
+
+function filterPositiveDataByMonth(data, month, year) {
+  const excelNumberRange = getExcelNumberFromMonthAndYear(month, year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  return data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    const amount = item['Amount'];
+    return (
+      bookingDate >= excelNumberFirstDay &&
+      bookingDate <= excelNumberLastDay &&
+      amount > 0
+    );
+  });
+}
+
+function filterNegativeDataByMonth(data, month, year) {
+  const excelNumberRange = getExcelNumberFromMonthAndYear(month, year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  return data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    const amount = item['Amount'];
+    return (
+      bookingDate >= excelNumberFirstDay &&
+      bookingDate <= excelNumberLastDay &&
+      amount < 0
     );
   });
 }
@@ -60,6 +93,39 @@ function filterDataByYear(data, year) {
   });
 }
 
+function filterPositiveDataByYear(data, year) {
+  const excelNumberRange = getExcelNumberFromYear(year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  return data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    const amount = item['Amount'];
+
+    return (
+      bookingDate >= excelNumberFirstDay &&
+      bookingDate <= excelNumberLastDay &&
+      amount > 0
+    );
+  });
+}
+
+function filterNegativeDataByYear(data, year) {
+  const excelNumberRange = getExcelNumberFromYear(year);
+  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberLastDay = excelNumberRange[1];
+
+  return data.filter((item) => {
+    const bookingDate = item['Booking Date'];
+    const amount = item['Amount'];
+    return (
+      bookingDate >= excelNumberFirstDay &&
+      bookingDate <= excelNumberLastDay &&
+      amount > 0
+    );
+  });
+}
+
 function calculateMonthlyExpense(data) {
   let totalExpense = 0;
 
@@ -67,7 +133,23 @@ function calculateMonthlyExpense(data) {
     const item = data[i];
     const amount = item['Amount'];
 
-    if (amount) {
+    if (amount < 0) {
+      totalExpense += parseFloat(amount);
+    }
+  }
+
+  return totalExpense;
+}
+
+function calculateMonthlyIncome(data) {
+  let totalExpense = 0;
+
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i];
+    const amount = item['Amount'];
+    const targetBank = item['Target Bank Account/IBAN'];
+
+    if (amount > 0 && targetBank != '1005936800') {
       totalExpense += parseFloat(amount);
     }
   }
@@ -124,12 +206,11 @@ function getExcelNumberFromDateObject(date) {
 module.exports = {
   readExcelFile,
   filterDataByMonth,
+  filterPositiveDataByMonth,
+  filterNegativeDataByMonth,
   filterDataByYear,
+  filterPositiveDataByYear,
+  filterNegativeDataByYear,
   calculateMonthlyExpense,
-  getDateFromExcelNumber,
-  getExcelNumberFromDayMonthAndYear,
-  getExcelNumberFromMonthAndYear,
-  getExcelNumberFromYear,
-  getExcelNumberFromDateObject,
-  getExcelNumberFromDateObject,
+  calculateMonthlyIncome,
 };
