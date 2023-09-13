@@ -5,12 +5,12 @@ const calculateCategoryTotals = (transactions) => {
     const { category, Amount } = transaction;
 
     if (!category) {
-      console.warn('Transaction has no category:', transaction);
+      console.warn("Transaction has no category:", transaction);
       return; // Skip this transaction and continue to the next one
     }
 
     if (isNaN(Amount)) {
-      console.warn('Transaction amount is not a number:', transaction);
+      console.warn("Transaction amount is not a number:", transaction);
       return; // Skip this transaction and continue to the next one
     }
 

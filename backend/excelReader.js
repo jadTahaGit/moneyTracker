@@ -1,4 +1,4 @@
-const XLSX = require('xlsx');
+const XLSX = require("xlsx");
 
 function cleanTransactionData(data) {
   const removedIndices = new Set();
@@ -11,10 +11,10 @@ function cleanTransactionData(data) {
       if (removedIndices.has(j)) continue;
 
       if (
-        data[i]['Amount'] === -data[j]['Amount'] &&
-        (data[i]['Target Bank Account/IBAN'] ===
-          data[j]['Target Bank Account/IBAN'] ||
-          data[i]['Payer/Receiver'] === data[j]['Payer/Receiver'])
+        data[i]["Amount"] === -data[j]["Amount"] &&
+        (data[i]["Target Bank Account/IBAN"] ===
+          data[j]["Target Bank Account/IBAN"] ||
+          data[i]["Payer/Receiver"] === data[j]["Payer/Receiver"])
       ) {
         // Found a pair, remove both transactions
         removedIndices.add(i);
@@ -23,10 +23,10 @@ function cleanTransactionData(data) {
         // Check for multiple reversals
         for (let k = j + 1; k < n; k++) {
           if (
-            data[i]['Amount'] === -data[k]['Amount'] &&
-            (data[i]['Target Bank Account/IBAN'] ===
-              data[k]['Target Bank Account/IBAN'] ||
-              data[i]['Payer/Receiver'] === data[k]['Payer/Receiver'])
+            data[i]["Amount"] === -data[k]["Amount"] &&
+            (data[i]["Target Bank Account/IBAN"] ===
+              data[k]["Target Bank Account/IBAN"] ||
+              data[i]["Payer/Receiver"] === data[k]["Payer/Receiver"])
           ) {
             multipleReversals.add(i);
             break;
@@ -42,7 +42,7 @@ function cleanTransactionData(data) {
   const cleanedData = data.filter((_, index) => !removedIndices.has(index));
 
   // Print transactions with multiple reversals
-  console.log('Transactions with multiple reversals:');
+  console.log("Transactions with multiple reversals:");
   multipleReversals.forEach((index) => console.log(data[index]));
 
   return cleanedData;
@@ -55,17 +55,17 @@ function readExcelFile(filePath, sheetName, cellRange) {
 
   const data = [];
   const headers = [
-    'My Bank Account',
-    'Booking Date',
-    'Validation Date',
-    'Booking Text',
-    'Purpose of Transaction',
-    'Payer/Receiver',
-    'Target Bank Account/IBAN',
-    'BIC (SWIFT-Code)',
-    'Amount',
-    'Currency',
-    'Info',
+    "My Bank Account",
+    "Booking Date",
+    "Validation Date",
+    "Booking Text",
+    "Purpose of Transaction",
+    "Payer/Receiver",
+    "Target Bank Account/IBAN",
+    "BIC (SWIFT-Code)",
+    "Amount",
+    "Currency",
+    "Info",
   ];
 
   for (let row = range.s.r + 1; row <= range.e.r; row++) {
@@ -84,11 +84,11 @@ function readExcelFile(filePath, sheetName, cellRange) {
 
 function filterDataByMonth(data, month, year) {
   const excelNumberRange = getExcelNumberFromMonthAndYear(month, year);
-  const excelNumberFirstDay = excelNumberRange[0];
+  const excelNumberFirstDay = excelNumberRange[0] - 1;
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
+    const bookingDate = item["Booking Date"];
 
     return (
       bookingDate >= excelNumberFirstDay && bookingDate <= excelNumberLastDay
@@ -102,8 +102,8 @@ function filterPositiveDataByMonth(data, month, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
-    const amount = item['Amount'];
+    const bookingDate = item["Booking Date"];
+    const amount = item["Amount"];
     return (
       bookingDate >= excelNumberFirstDay &&
       bookingDate <= excelNumberLastDay &&
@@ -118,8 +118,8 @@ function filterNegativeDataByMonth(data, month, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
-    const amount = item['Amount'];
+    const bookingDate = item["Booking Date"];
+    const amount = item["Amount"];
     return (
       bookingDate >= excelNumberFirstDay &&
       bookingDate <= excelNumberLastDay &&
@@ -134,7 +134,7 @@ function filterDataByYear(data, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
+    const bookingDate = item["Booking Date"];
     return (
       bookingDate >= excelNumberFirstDay && bookingDate <= excelNumberLastDay
     );
@@ -147,8 +147,8 @@ function filterPositiveDataByYear(data, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
-    const amount = item['Amount'];
+    const bookingDate = item["Booking Date"];
+    const amount = item["Amount"];
 
     return (
       bookingDate >= excelNumberFirstDay &&
@@ -164,8 +164,8 @@ function filterNegativeDataByYear(data, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   return data.filter((item) => {
-    const bookingDate = item['Booking Date'];
-    const amount = item['Amount'];
+    const bookingDate = item["Booking Date"];
+    const amount = item["Amount"];
     return (
       bookingDate >= excelNumberFirstDay &&
       bookingDate <= excelNumberLastDay &&
@@ -180,8 +180,8 @@ function filterMonthlyExpensesOfASpecificYear(data, year) {
   const excelNumberLastDay = excelNumberRange[1];
 
   const filteredData = data.filter((item) => {
-    const bookingDate = item['Booking Date'];
-    const amount = item['Amount'];
+    const bookingDate = item["Booking Date"];
+    const amount = item["Amount"];
     return (
       bookingDate >= excelNumberFirstDay &&
       bookingDate <= excelNumberLastDay &&
@@ -190,18 +190,18 @@ function filterMonthlyExpensesOfASpecificYear(data, year) {
   });
 
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
   const monthlyData = Array.from({ length: 12 }).map((_, i) => ({
     Month: months[i],
@@ -209,10 +209,10 @@ function filterMonthlyExpensesOfASpecificYear(data, year) {
   }));
 
   filteredData.forEach((item) => {
-    const bookingDate = getDateFromExcelNumber(item['Booking Date']);
+    const bookingDate = getDateFromExcelNumber(item["Booking Date"]);
     const bookingDateObject = new Date(bookingDate);
     const monthIndex = bookingDateObject.getMonth();
-    monthlyData[monthIndex].Amount += item['Amount'];
+    monthlyData[monthIndex].Amount += item["Amount"];
   });
 
   return monthlyData;
@@ -223,7 +223,7 @@ function calculateMonthlyExpense(data) {
 
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
-    const amount = item['Amount'];
+    const amount = item["Amount"];
 
     if (amount < 0) {
       totalExpense += parseFloat(amount);
@@ -238,10 +238,10 @@ function calculateMonthlyIncome(data) {
 
   for (let i = 0; i < data.length; i++) {
     const item = data[i];
-    const amount = item['Amount'];
-    const targetBank = item['Target Bank Account/IBAN'];
+    const amount = item["Amount"];
+    const targetBank = item["Target Bank Account/IBAN"];
 
-    if (amount > 0 && targetBank != '1005936800') {
+    if (amount > 0 && targetBank != "1005936800") {
       totalExpense += parseFloat(amount);
     }
   }
@@ -254,7 +254,7 @@ function getDateFromExcelNumber(number) {
   const date = new Date(
     excelEpoch.getTime() + (number - 1) * 24 * 60 * 60 * 1000
   );
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 
 function getExcelNumberFromDayMonthAndYear(day, month, year) {
