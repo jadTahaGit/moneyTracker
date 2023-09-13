@@ -6,6 +6,10 @@ const calculateCategoryTotals = require("./Cat_utlities/CatTotalsCalculator");
 const app = express();
 app.use(cors());
 
+//test on /api/
+app.get("/api/", (req, res) => {
+  res.send("Hello, World!");
+});
 app.get("/api/data/:month/:year", dataRoutes.getDataByMonth);
 app.get("/api/positive-data/:month/:year", dataRoutes.getPositiveDataByMonth);
 app.get("/api/negative-data/:month/:year", dataRoutes.getNegativeDataByMonth);
